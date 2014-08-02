@@ -1,0 +1,6 @@
+AuthName "Page d'administration protégée, veuillez vous identifier"
+AuthType Basic
+AuthUserFile "C:/wamp/www/storeadmin/.htpasswd"
+Require valid-user
+
+

@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Zoom</title>
+        <style type="text/css" media="all">@import "http://imgext.spartoo.com/css/spartoo-20111219.css";</style>
+                        <style type="text/css" media="all">@import "http://imgext.spartoo.com/css/spartoo_fr-20111219.css";</style><link rel="search" type="application/opensearchdescription+xml" title="www.spartoo.com" href="/searchEngine.xml" />
+        <script language="javascript">
+            var i=0;
+            function resize() {
+                if (document.layers) i=40;
+                self.focus();
+            }
+            
+            function replaceImage (imagePath, imageBigPath) {
+                document.getElementById('productImage').src = imagePath;
+                imageView = imageBigPath;
+            }
+
+            function replaceLink (link) {
+                imageViewId = link;
+            }
+
+            function prechargement() {
+                var ext = ".jpg";
+                var liste_images = new Array("_350_A","_350_B","_350_C","_350_D","_350_E","_350_F","_350_G","_350_H");
+                document.image_chargee = new Array();
+                document.image_chargee2 = new Array();
+                var chemin = "http://imgext.spartoo.com/photos/423/42328/42328";
+                for( i = 0; i < liste_images.length; i++ ){
+                    document.image_chargee[i] = new Image;
+                    document.image_chargee[i].src = chemin + liste_images[i] + ext;
+                }
+            }
+
+            function replaceIcon (imgObj, iconPath) {
+
+                if(document.images.view1) {
+                    document.images.view1.src = 'http://imgext.spartoo.com/images/viewmenu-3d-on.gif';
+                }
+                if(document.images.view2) {
+                    document.images.view2.src = 'http://imgext.spartoo.com/images/viewmenu-front-on.gif';
+                }
+                if(document.images.view3) {
+                    document.images.view3.src = 'http://imgext.spartoo.com/images/viewmenu-side-on.gif';
+                }
+                if(document.images.view4) {
+                    document.images.view4.src = 'http://imgext.spartoo.com/images/viewmenu-back-on.gif';
+                }
+                if(document.images.view5) {
+                    document.images.view5.src = 'http://imgext.spartoo.com/images/viewmenu-under-on.gif';
+                }
+                if(document.images.view6) {
+                    document.images.view6.src = 'http://imgext.spartoo.com/images/viewmenu-zoom-on.gif';
+                }
+
+                eval("document.images." + imgObj + ".src = 'http://imgext.spartoo.com/images/viewmenu-" + iconPath + "-off.gif'");
+            }
+
+            var imageView = 'A'; // ABSOLUTE PATH TO PRODUCT STANDARD IMAGE, WIDTH:200PX
+            var imageViewId = 'A';
+            
+            
+            var myShoeOffset=0;
+            var cursorX,cursorY;
+            var myShoeIsTurning = 0;
+            var lastX = 0;
+            var lastXOffset = 0;
+            var nb360Images = 0;
+            var start360Images = 0;
+            
+            function initMyShoe() {
+                if (document.getElementById('start360Images')) {
+                    start360Images = document.getElementById('start360Images').value;
+                }
+
+                if (document.getElementById('nb360Images')) {
+                    nb360Images = document.getElementById('nb360Images').value;
+                    if (nb360Images) {
+                        var myShoeMoover = document.getElementById('myShoeMoover');
+                        if (myShoeMoover) {
+                            if (myShoeMoover.addEventListener) {
+                                myShoeMoover.addEventListener('mousemove', mouseTurn, false);
+                                
+                            } else if (myShoeMoover.attachEvent) {
+                                myShoeMoover.attachEvent('onmousemove', mouseTurn);
+                                
+                            } else if (navigator.appName.substring(0,3) == "Net") {
+                                myShoeMoover.captureEvents(Event.MOUSEMOVE);
+                                myShoeMoover.onmousemove = mouseTurn;
+                                
+                            } else {
+                                myShoeMoover.onmousemove = mouseTurn;
+                                myShoeMoover.onmouseout = mouseTurn;
+                            }
+                        }
+                    }
+                }
+                if (document.getElementById('myShoe')) {
+                    document.getElementById('myShoe').style.marginLeft = "-"+document.getElementById('myShoe').width/2+"px";
+                    document.getElementById('myShoe').style.marginTop = "-"+document.getElementById('myShoe').height/2+"px";
+                    document.getElementById('myShoe').style.visibility = "visible";
+                }
+            }
+            
+            function getCursor(evenement) {
+                
+                cursorX = (evenement ? evenement.clientX : window.event.clientX) + (document.body.scrollLeft || document.documentElement.scrollLeft);
+                cursorY = (evenement ? evenement.clientY : window.event.clientY) + (document.body.scrollTop || document.documentElement.scrollTop);
+            }
+            
+            function mouseTurn(evt) {
+                if (!evt) evt = window.event;
+                getCursor(evt);
+                
+                window.focus();
+                
+                if (myShoeIsTurning) {
+                    myShoeOffset = lastXOffset + lastX - cursorX;
+                    
+                    var myImageChoice = parseInt(nb360Images*(myShoeOffset%360.0)/360.0);
+                    
+                    if (myImageChoice<start360Images) {
+                        myImageChoice+=parseInt(nb360Images);	
+                    }
+                    
+                    
+                    if (document.getElementById('p_id')) {
+                        document.getElementById('myShoe').src='http://photos6.spartoo.com/photos/'+document.getElementById('p_id').value.substr(0, 3)+'/'+document.getElementById('p_id').value+
+                                    '/vr/'+document.getElementById('p_id').value+'_360_'+myImageChoice+'.jpg';
+                    }
+                    
+                } else {
+                    lastXOffset = myShoeOffset;
+                    lastX = cursorX;
+                }
+            }
+            
+            function startTurningMyShoe() {
+                
+                myShoeIsTurning = 1;
+                
+            }
+            function stopTurningMyShoe() {
+                
+                myShoeIsTurning = 0;
+            }
+            
+            function onDragReplace() {
+                if (nb360Images>0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            
+        </script>
+
+    </head>
+    <body onload="resize();prechargement();initMyShoe();" style="cursor:pointer;" 
+        id="myShoeMoover" ondrag="return onDragReplace();"
+        onmousedown="startTurningMyShoe();return onDragReplace();"
+        onmouseup="stopTurningMyShoe();return onDragReplace();">
+        <div  id="laGrosse" style="margin:auto; width:760px;">
+        <div style="background:url(http://imgext.spartoo.com/includes/languages/french/images/popup-fond//.gif); width:650px; height:650px; z-index:1;">
+        
+            <div id="conteneurImage" style="text-align:center;height:650px; width:650px;">
+                <img id="productImage" src="http://imgext.spartoo.com/photos/423/42328/42328_350_A.jpg" name="productImage" alt="42328" style="position:absolute;top:50%;left:50%;margin-left:-175px;margin-top:-175px;">
+            </div>
+                <div id="titreImage" style="position: absolute;top:550px;width:650px;text-align:center;">
+                  <div id="contentVign" style="">
+
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_A.jpg','A');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_A.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_B.jpg','B');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_B.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_C.jpg','C');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_C.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_D.jpg','D');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_D.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_E.jpg','E');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_E.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_F.jpg','F');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_F.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_G.jpg','G');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_G.jpg" width="40" height="40" border="0" alt="" />
+    </a>
+    <a href="#" onmouseover="replaceImage('http://imgext.spartoo.com/photos/423/42328/42328_350_H.jpg','H');">
+            <img class="popthumb3" src="http://imgext.spartoo.com/photos/423/42328/42328_40_H.jpg" width="40" height="40" border="0" alt="" />
+    </a><a href="popup_image_panier.php?pID=42328">
+                    
+                </a></div></div></div>
+            
+        <div style="position:absolute; margin:auto; z-index:10;top:5px;right:25px;">
+
+            
+        </div>
+		</div>
+    </body>
+</html>
